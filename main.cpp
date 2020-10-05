@@ -97,15 +97,17 @@ int main()
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f
+            -0.9f, -0.5f, 0.0f,
+            0.0f, -0.5f, 0.0f,
+            -0.45f, 0.5f, 0.0f,
+            0.0f, -0.5f, 0.0f,
+            0.9f, -0.5f, 0.0f,
+            0.45f, 0.5f, 0.0f
     };
-    unsigned int indices[] = {
-            0, 1, 2,
-            1, 2, 3
-    };
+//    unsigned int indices[] = {
+//            0, 1, 2,
+//            1, 2, 3
+//    };
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -118,10 +120,10 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+//    unsigned int EBO;
+//    glGenBuffers(1, &EBO);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the
     // vertex attribute's bound vertex buffer object so afterwards we can safely unbind.
@@ -154,8 +156,8 @@ int main()
         // draw our first triangle
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
