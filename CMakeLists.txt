@@ -12,6 +12,6 @@ include_directories(
 
 link_directories(lib/glfw)
 
-add_executable(learnopengl main.cpp glad.c)
+add_executable(learnopengl main.cpp glad.c Shader.cpp Shader.h)
 
 target_link_libraries(learnopengl glfw3 opengl32)

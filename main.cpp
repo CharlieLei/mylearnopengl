@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include "Shader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -12,22 +13,24 @@ const unsigned int SCR_HEIGHT = 600;
 
 const char *vertexShaderSource = "#version 330 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
+                                 "layout (location = 1) in vec3 aColor;\n"
                                  "\n"
-                                 "void main() {\n"
-                                 "    gl_Position = vec4(aPos.xyz, 1.0f);\n"
+                                 "out vec3 ourColor;\n"
+                                 "\n"
+                                 "void main()\n"
+                                 "{\n"
+                                 "    gl_Position = vec4(aPos, 1.0f);\n"
+                                 "    ourColor = aColor;\n"
                                  "}\0";
 const char *fragmentShaderSource = "#version 330 core\n"
                                    "out vec4 FragColor;\n"
                                    "\n"
-                                   "void main() {\n"
-                                   "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                   "in vec3 ourColor;\n"
+                                   "\n"
+                                   "void main()\n"
+                                   "{\n"
+                                   "    FragColor = vec4(ourColor, 1.0);\n"
                                    "}\0";
-const char *fragmentShaderSource2 = "#version 330 core\n"
-                                    "out vec4 FragColor;\n"
-                                    "\n"
-                                    "void main() {\n"
-                                    "    FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
-                                    "}\0";
 
 int main()
 {
@@ -61,64 +64,30 @@ int main()
 
     // build and compile our shader program
     // ------------------------------------
-    // vertex shader
-    int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-    // fragment shader 1
-    int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-    // fragment shader 2
-    int fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, nullptr);
-    glCompileShader(fragmentShader2);
-    // link shaders to shader program 1
-    int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // link shaders to shader program 2
-    int shaderProgram2 = glCreateProgram();
-    glAttachShader(shaderProgram2, vertexShader);
-    glAttachShader(shaderProgram2, fragmentShader2);
-    glLinkProgram(shaderProgram2);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    glDeleteShader(fragmentShader2);
+    Shader ourShader(R"(C:\Users\01\CLionProjects\mylearnopengl\shader\vertex.glsl)",
+            R"(C:\Users\01\CLionProjects\mylearnopengl\shader\fragment.glsl)");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float firstTriangle[] = {
-            -0.9f, -0.5f, 0.0f,
-            0.0f, -0.5f, 0.0f,
-            -0.45f, 0.5f, 0.0f,
-    };
-    float secondTriangle[] = {
-            0.0f, -0.5f, 0.0f,  // left
-            0.9f, -0.5f, 0.0f,  // right
-            0.45f, 0.5f, 0.0f   // top
+            // 位置              // 颜色
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // 右下
+            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // 左下
+            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // 顶部
     };
 
-    unsigned int VAOs[2], VBOs[2];
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
     // first triangle setup
     // --------------------
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
-    // second triangle setup
-    // --------------------
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // render loop
     // -----------
@@ -134,12 +103,9 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw first triangle
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAOs[0]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        // draw second triangle
-        glUseProgram(shaderProgram2);
-        glBindVertexArray(VAOs[1]);
+        ourShader.use();
+
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
