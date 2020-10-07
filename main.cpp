@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "stb_image.h"
 
 #include <iostream>
@@ -165,6 +167,12 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         ourShader.setFloat("mixValue", mixValue);
+
+        glm::mat4 trans(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0) );
+        unsigned int transformLoc = glGetUniformLocation(ourShader.shaderProgramID, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
         ourShader.use();
         glBindVertexArray(VAO);
