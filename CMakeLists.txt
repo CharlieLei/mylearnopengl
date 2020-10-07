@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(
         includes/glad
         includes/glfw
-        includes/stbImage
 )
 
 link_directories(lib/glfw)
