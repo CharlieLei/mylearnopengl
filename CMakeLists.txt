@@ -12,6 +12,6 @@ include_directories(
 
 link_directories(lib/glfw)
 
-add_executable(learnopengl main.cpp glad.c Shader.cpp Shader.h stb_image.cpp stb_image.h)
+add_executable(learnopengl main.cpp glad.c Shader.cpp Shader.h stb_image.cpp stb_image.h Camera.cpp Camera.h)
 
 target_link_libraries(learnopengl glfw3 opengl32)
