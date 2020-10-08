@@ -31,8 +31,6 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 
     // 2. 编译着色器
     unsigned int vertex, fragment;
-    int success;
-    char infoLog[512];
     // 顶点着色器
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, nullptr);
