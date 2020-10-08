@@ -1,7 +1,3 @@
-//
-// Created by 01 on 2020/10/8.
-//
-
 #include "Camera.h"
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
@@ -64,9 +60,9 @@ void Camera::ProcessMouseScroll(float yoffset)
 void Camera::updateCameraVectors()
 {
     glm::vec3 newFront;
-    newFront.x = cos(glm::radians(Pitch)) * sin(glm::radians(Yaw));
+    newFront.x = cos(glm::radians(Pitch)) * cos(glm::radians(Yaw));
     newFront.y = sin(glm::radians(Pitch));
-    newFront.z = cos(glm::radians(Pitch)) * cos(glm::radians(Yaw));
+    newFront.z = cos(glm::radians(Pitch)) * sin(glm::radians(Yaw));
     Front = newFront;
     Right = glm::normalize( glm::cross(Front, WorldUp) );
     Up    = glm::normalize( glm::cross(Right, Front));
