@@ -76,10 +76,8 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader lightingShader(R"(C:\Users\01\CLionProjects\mylearnopengl\shader\vertex.glsl)",
-                          R"(C:\Users\01\CLionProjects\mylearnopengl\shader\objectFragment.glsl)");
-    Shader lightCubeShader(R"(C:\Users\01\CLionProjects\mylearnopengl\shader\vertex.glsl)",
-                           R"(C:\Users\01\CLionProjects\mylearnopengl\shader\lightFragment.glsl)");
+    Shader lightingShader("../shader/vertex.glsl","../shader/objectFragment.glsl");
+    Shader lightCubeShader("../shader/vertex.glsl","../shader/lightFragment.glsl");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
