@@ -5,13 +5,13 @@ project(learnopengl)
 set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
-include_directories(
-        includes/glad
-        includes/glfw
-)
+include_directories(includes)
 
-link_directories(lib/glfw)
+link_directories(
+        lib/glfw
+        lib/assimp
+)
 
 add_executable(learnopengl main.cpp glad.c Shader.cpp Shader.h stb_image.cpp stb_image.h Camera.cpp Camera.h)
 
-target_link_libraries(learnopengl glfw3 opengl32)
+target_link_libraries(learnopengl glfw3 assimp-vc142-mtd opengl32)
