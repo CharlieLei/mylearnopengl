@@ -36,7 +36,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(0.0f, 0.0f, 5.0f);
 
 int main() {
     // glfw: initialize and configure
@@ -162,12 +162,14 @@ int main() {
     // -------------------------
     unsigned int diffuseMap = loadTexture("../resources/textures/container2.png");
     unsigned int specularMap = loadTexture("../resources/textures/container2_specular.png");
+    unsigned int emissionMap = loadTexture("../resources/textures/matrix.jpg");
 
     // shader configuration
     // --------------------
     lightingShader.use();
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
+    lightingShader.setInt("material.emission", 2);
 
     // render loop
     // -----------
@@ -212,6 +214,8 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, emissionMap);
 
         // render the cube
         glBindVertexArray(cubeVAO);
